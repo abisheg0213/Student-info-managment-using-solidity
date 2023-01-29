@@ -15,12 +15,22 @@ contract sturesult
         chairper=msg.sender;
         examiner=exam;
     }
-    function regstu(address stu,uint r) public 
+    modifier onlycp(address u)
+    {
+        require(u==chairper);
+        _;
+    }
+    modifier onlyexam(address u)
+    {
+        require(examiner==u);
+        _;
+    }
+    function regstu(address stu,uint r) public onlycp(msg.sender)
     {
         // uint tmark;
         Students[stu].regno=r;
     }
-    function calres(address da) public 
+    function calres(address da)
     {
         uint res;
         for (uint i=0;i<5;i++)
@@ -30,12 +40,13 @@ contract sturesult
         Students[da].totalmarks=res;
       
     }
-    function entermark(address i,uint m,uint sub) public
+    function entermark(address i,uint m,uint sub) public onlyexam(msg.sender)
     {
         Students[i].marks[sub]=m;
     }
     function decresult(address ws) constant public returns(uint)
     {
+        calres(ws);
         return Students[ws].totalmarks;
     }
 }
