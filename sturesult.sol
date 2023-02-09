@@ -1,4 +1,4 @@
-pragma solidity ^0.4.10;
+pragma solidity ^0.8.17;
 contract sturesult
 {
     struct student
@@ -10,7 +10,7 @@ contract sturesult
     address chairper;
     address examiner;
     mapping (address => student) Students;
-    function sturesult(address exam)
+    constructor(address exam)
     {
         chairper=msg.sender;
         examiner=exam;
@@ -30,7 +30,7 @@ contract sturesult
         // uint tmark;
         Students[stu].regno=r;
     }
-    function calres(address da)
+    function calres(address da) private
     {
         uint res;
         for (uint i=0;i<5;i++)
@@ -38,15 +38,17 @@ contract sturesult
             res+=Students[da].marks[i];
         }
         Students[da].totalmarks=res;
-      
     }
     function entermark(address i,uint m,uint sub) public onlyexam(msg.sender)
     {
         Students[i].marks[sub]=m;
     }
-    function decresult(address ws) constant public returns(uint)
+    function calresult(address ws) public
     {
         calres(ws);
-        return Students[ws].totalmarks;
+    }
+    function decresult(address fd) view public returns(uint)
+    {
+        return Students[fd].totalmarks;
     }
 }
